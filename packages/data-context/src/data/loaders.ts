@@ -2,7 +2,7 @@ import type { FullConfig } from '@packages/types'
 import DataLoader from 'dataloader'
 import fs from 'fs-extra'
 import type { DataContext } from '..'
-import { GitInfo, getGitInfo } from './util'
+import { GitInfo, getGitInfo, getStorybookInfo, StorybookInfo } from './util'
 
 /**
  * Centralized location to load files. Allows us to consolidate
@@ -32,6 +32,14 @@ export class DataLoaders {
   gitInfo (path: string) {
     return this.gitLoader.load(path)
   }
+
+  storybookInfo (path: string) {
+    return this.storybookLoader.load(path)
+  }
+
+  private storybookLoader = this.loader<string, StorybookInfo | null>((projectRoots) => {
+    return getStorybookInfo(projectRoots)
+  })
 
   private gitLoader = this.loader<string, GitInfo>((absolutePaths) => {
     return getGitInfo(absolutePaths)
